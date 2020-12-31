@@ -172,8 +172,20 @@ static void update_track_data(UIState *s, const cereal::ModelDataV2::XYZTData::R
 }
 
 static void ui_draw_track(UIState *s, track_vertices_data *pvd) {
-  NVGpaint track_bg = nvgLinearGradient(s->vg, s->fb_w, s->fb_h, s->fb_w, s->fb_h * .4,
-                                        COLOR_WHITE, COLOR_WHITE_ALPHA(0));
+  bool is_enabled = s->scene.controls_state.getEnabled();
+  const cereal::ModelDataV2::XYZTData::Reader &pos = s->scene.model.getPosition();
+  if (pos.getY().size() == 0) return;
+
+  NVGpaint track_bg;
+  if (is_enabled) {
+    // Draw colored vision track
+    track_bg = nvgLinearGradient(s->vg, s->fb_w, s->fb_h, s->fb_w, s->fb_h*.4,
+                                 nvgRGBA( 4, 106, 56, 255), nvgRGBA( 4, 106, 56, 50));
+  } else {
+    track_bg = nvgLinearGradient(s->vg, s->fb_w, s->fb_h, s->fb_w, s->fb_h * .4,
+                                          COLOR_WHITE, COLOR_WHITE_ALPHA(0));
+  }
+
   ui_draw_line(s, &pvd->v[0], pvd->cnt, nullptr, &track_bg);
 }
 
