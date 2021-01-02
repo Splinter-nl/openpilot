@@ -1,3 +1,18 @@
+What is this fork about
+------
+
+My comma two drives a 2021 Honda Civic hatch sport. My eps fw is modded for more torque. To be able to use openpilot I have to adjust the stock tuning since my EPS mod is not compatible with the stock tuning OP offers. I also added some features I like to have: 
+* No disengage on using the gas pedal
+* DualPID/tuning for dual PI
+* Colored path (green) while OP engaged
+* REC button for dashcam feature and recording the screen in HD
+
+I will update this fork as much as possible from the original master-ci branch. This fork is focussed on the Honda Civic hatch with Bosch radar. Please feel free to use at your own risk and if you have any questuions you can contact me on Discord.
+
+V/R
+
+Splinter
+
 [![](https://i.imgur.com/UelUjKAh.png)](#)
 
 Table of Contents
@@ -40,17 +55,6 @@ What is openpilot?
     <td><a href="https://www.youtube.com/watch?v=_P-N1ewNne4" title="YouTube" rel="noopener"><img src="https://i.imgur.com/gAyAq22.png"></a></td>
   </tr>
 </table>
-
-What is this fork about
-------
-
-My comma two drives a 2021 Honda Civic hatch sport. My eps fw is modded for more torque. To be able to use openpilot I have to adjust the stock tuning since my EPS mod is not compatible with the stock tuning OP offers. I also added some features I like to have: 
-* No disengage on gas
-* DualPID
-* Colored path while OP engaged
-* REC button for dashcam feature
-
-I will update this fork as much as possible from the original master-ci branch. The fork is focussed on the Honda Civic hatch with Bosch radar. Please contact me on Discord with any questions.
 
 Integration with Stock Features
 ------
