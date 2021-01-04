@@ -141,7 +141,6 @@ void start_capture() {
   char filename[64];
   struct tm tm = get_time_struct();
   snprintf(filename,sizeof(filename),"%04d%02d%02d-%02d%02d%02d.mp4", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
-  //snprintf(cmd,sizeof(cmd),"screenrecord --size 1280x720 --bit-rate 10000000 %s/%s&",videos_dir,filename);
   snprintf(cmd,sizeof(cmd),"screenrecord --size 1920x1080 --bit-rate 5000000 %s/%s&",videos_dir,filename);
   strcpy(filenames[captureNum],filename);
 
@@ -175,8 +174,8 @@ bool screen_lock_button_clicked(int touch_x, int touch_y, dashcam_element el) {
 }
 
 bool screen_button_clicked(int touch_x, int touch_y) {
-  if (touch_x >= 1660 && touch_x <= 1820) {
-    if (touch_y >= 885 && touch_y <= 1055) {
+  if (touch_x >= 1720 && touch_x <= 1870) {
+    if (touch_y >= 880 && touch_y <= 1030) {
       return true;
     }
   }
@@ -194,7 +193,7 @@ void draw_date_time(UIState *s) {
   int rect_w = 465;
   int rect_h = 80;
   int rect_x = (1920-rect_w)/2;
-  int rect_y = (1080-rect_h-30);
+  int rect_y = (1080-rect_h-50);
 
   // Get local time to display
   char now[50];
@@ -240,15 +239,15 @@ void draw_lock_button(UIState *s) {
   }
 
   nvgBeginPath(s->vg);
-  NVGpaint imgPaint = nvgImagePattern(s->vg, btn_x-120, btn_y-30, 150, 150, 0, lock_image, alpha);
-  nvgRoundedRect(s->vg, btn_x-120, btn_y-30, 150, 150, 100);
+  NVGpaint imgPaint = nvgImagePattern(s->vg, btn_x-65, btn_y-50, 150, 150, 0, lock_image, alpha);
+  nvgRoundedRect(s->vg, btn_x-65, btn_y-50, 150, 150, 100);
   nvgFillPaint(s->vg, imgPaint);
   nvgFill(s->vg);
 
 
   lock_button = (dashcam_element){
-    .pos_x = 1500,
-    .pos_y = 920,
+    .pos_x = 1555,
+    .pos_y = 880,
     .width = 150,
     .height = 150
   };
@@ -265,10 +264,10 @@ static void screen_draw_button(UIState *s, int touch_x, int touch_y) {
 
     int btn_w = 150;
     int btn_h = 150;
-    int btn_x = 1920 - btn_w+5;
-    int btn_y = 1080 - btn_h+5; //Shift REC button down some -wirelessnet2
+    int btn_x = 1920 - btn_w;
+    int btn_y = 1080 - btn_h;
     nvgBeginPath(s->vg);
-      nvgRoundedRect(s->vg, btn_x-110+12, btn_y-45+5, btn_w, btn_h, 100); //Shift REC button down some -wirelessnet2
+      nvgRoundedRect(s->vg, btn_x-50, btn_y-50, btn_w, btn_h, 100);
       nvgStrokeColor(s->vg, nvgRGBA(255,255,255,80));
       nvgStrokeWidth(s->vg, 6);
       nvgStroke(s->vg);
@@ -284,7 +283,7 @@ static void screen_draw_button(UIState *s, int touch_x, int touch_y) {
       else {
         nvgFillColor(s->vg, nvgRGBA(255, 255, 255, 200));
       }
-      nvgText(s->vg,btn_x-35+12,btn_y+50+5,"REC",NULL); //Shift REC button down some -wirelessnet2
+      nvgText(s->vg,btn_x+25,btn_y+45,"REC",NULL);
   }
 
   if (captureState == CAPTURE_STATE_CAPTURING) {
