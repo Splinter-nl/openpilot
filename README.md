@@ -7,7 +7,7 @@ My comma two drives a 2021 Honda Civic Sport hatchback. The eps fw is modded for
 * Colored path (green) while OP engaged
 * REC button for dashcam feature (recording the screen in HD)
 
-If you have a comma two and drive a Honda Civic with a Bosch radar this fork is an good option if your eps fw is modded. Feel free to use this fork/branch at your own risk.
+Do you have a comma two and drive a Honda Civic with a Bosch radar this fork is an good option if your eps fw is modded. Feel free to use this fork/branch at your own risk.
 
 [![](https://i.imgur.com/UelUjKAh.png)](#)
 
