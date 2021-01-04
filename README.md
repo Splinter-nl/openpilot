@@ -1,7 +1,7 @@
 What is this fork about
 ------
 
-My comma two drives a 2021 Honda Civic Sport hatchback. The eps fw is modded for better performance with openpilot. The lateral tuning is adjusted to get an optimum openpilot experience. This fork adds the following features:
+My comma two drives a 2021 Honda Civic Sport hatchback. The eps fw is modded for better performance with openpilot. The lateral tuning is adjusted to get an optimum openpilot experience. This branch adds the following features:
 * DualPID/lateral tuning for modded eps fw
 * No disengage on gas press
 * Colored path (green) while OP engaged
