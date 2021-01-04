@@ -194,7 +194,7 @@ void draw_date_time(UIState *s) {
   int rect_w = 465;
   int rect_h = 80;
   int rect_x = (1920-rect_w)/2;
-  int rect_y = (1080-rect_h-10);
+  int rect_y = (1080-rect_h-30);
 
   // Get local time to display
   char now[50];
@@ -240,8 +240,8 @@ void draw_lock_button(UIState *s) {
   }
 
   nvgBeginPath(s->vg);
-  NVGpaint imgPaint = nvgImagePattern(s->vg, btn_x-125, btn_y-30, 150, 150, 0, lock_image, alpha);
-  nvgRoundedRect(s->vg, btn_x-125, btn_y-30, 150, 150, 100);
+  NVGpaint imgPaint = nvgImagePattern(s->vg, btn_x-120, btn_y-30, 150, 150, 0, lock_image, alpha);
+  nvgRoundedRect(s->vg, btn_x-120, btn_y-30, 150, 150, 100);
   nvgFillPaint(s->vg, imgPaint);
   nvgFill(s->vg);
 
@@ -265,7 +265,7 @@ static void screen_draw_button(UIState *s, int touch_x, int touch_y) {
 
     int btn_w = 150;
     int btn_h = 150;
-    int btn_x = 1920 - btn_w+12;
+    int btn_x = 1920 - btn_w+5;
     int btn_y = 1080 - btn_h+5; //Shift REC button down some -wirelessnet2
     nvgBeginPath(s->vg);
       nvgRoundedRect(s->vg, btn_x-110+12, btn_y-45+5, btn_w, btn_h, 100); //Shift REC button down some -wirelessnet2
