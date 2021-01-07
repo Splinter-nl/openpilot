@@ -68,6 +68,9 @@ static void handle_display_state(UIState *s, bool user_input) {
 }
 
 static void handle_vision_touch(UIState *s, int touch_x, int touch_y) {
+  if (touch_x >= sbr_w) {
+          return;
+  }
   if (s->started && (touch_x >= s->scene.viz_rect.x - bdr_s)
       && (s->active_app != cereal::UiLayoutState::App::SETTINGS)) {
     if (!s->scene.frontview) {
