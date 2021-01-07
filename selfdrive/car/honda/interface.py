@@ -167,7 +167,7 @@ class CarInterface(CarInterfaceBase):
         # modified filter output values:  0x009F, 0x0108, 0x0108, 0x0108, 0x0108, 0x0108, 0x0108, 0x0400, 0x0480
         # note: max request allowed is 4096, but request is capped at 3840 in firmware, so modifications result in 2x max
       ret.lateralParams.torqueBP, ret.lateralParams.torqueV = [[0, 2560, 8000], [0, 2560, 3840]]
-      ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[1.1, 0.22], [0.33, 0.0733]] # modded fam put your values here
+      ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[1.1, 0.3], [0.33, 0.09]] # 2.5x modded (base kp 0.3, base ki 0.09)
       tire_stiffness_factor = 1.
       ret.longitudinalTuning.kpBP = [0., 5., 35.]
       ret.longitudinalTuning.kpV = [3.6, 2.4, 1.5]
@@ -181,7 +181,7 @@ class CarInterface(CarInterfaceBase):
       ret.centerToFront = CivicParams.CENTER_TO_FRONT
       ret.steerRatio = 15.38  # 10.93 is end-to-end spec
       ret.lateralParams.torqueBP, ret.lateralParams.torqueV = [[0, 2564, 8000], [0, 2564, 3840]]
-      ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[1.1, 0.22], [0.33, 0.0733]] # modded fam put your values here
+      ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[1.1, 0.28], [0.33, 0.085]] # 2.5x modded (base kp 0.3, base ki 0.09)
       tire_stiffness_factor = 1.
       ret.longitudinalTuning.kpBP = [0., 5., 35.]
       ret.longitudinalTuning.kpV = [1.2, 0.8, 0.5]
