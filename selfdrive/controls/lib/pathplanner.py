@@ -15,7 +15,7 @@ LaneChangeDirection = log.PathPlan.LaneChangeDirection
 
 LOG_MPC = os.environ.get('LOG_MPC', False)
 
-LANE_CHANGE_SPEED_MIN = 45 * CV.MPH_TO_MS
+LANE_CHANGE_SPEED_MIN = 25 * CV.MPH_TO_MS
 LANE_CHANGE_TIME_MAX = 10.
 
 DESIRES = {
@@ -111,10 +111,6 @@ class PathPlanner():
       self.lane_change_state = LaneChangeState.off
       self.lane_change_direction = LaneChangeDirection.none
     else:
-      torque_applied = sm['carState'].steeringPressed and \
-                       ((sm['carState'].steeringTorque > 0 and self.lane_change_direction == LaneChangeDirection.left) or
-                        (sm['carState'].steeringTorque < 0 and self.lane_change_direction == LaneChangeDirection.right))
-      if not self.alca_nudge_required:
       torque_applied = True
 
       blindspot_detected = ((sm['carState'].leftBlindspot and self.lane_change_direction == LaneChangeDirection.left) or
