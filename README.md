@@ -6,6 +6,7 @@ My comma two drives a 2021 Honda Civic Sport hatchback. The eps fw is modded for
 * No disengage on gas press
 * Colored path (green) while OP engaged
 * REC button for dashcam feature (recording the screen in HD)
+* Lane change on blinker only
 
 [![](https://i.imgur.com/UelUjKAh.png)](#)
 
