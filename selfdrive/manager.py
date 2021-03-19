@@ -19,7 +19,7 @@ from common.basedir import BASEDIR
 from common.spinner import Spinner
 from common.text_window import TextWindow
 import selfdrive.crash as crash
-from selfdrive.hardware import HARDWARE, EON, PC
+from selfdrive.hardware import HARDWARE, EON, PC, TICI
 from selfdrive.hardware.eon.apk import update_apks, pm_apply_packages, start_offroad
 from selfdrive.swaglog import cloudlog, add_logentries_handler
 from selfdrive.version import version, dirty
@@ -27,7 +27,7 @@ from selfdrive.version import version, dirty
 os.environ['BASEDIR'] = BASEDIR
 sys.path.append(os.path.join(BASEDIR, "pyextra"))
 
-TOTAL_SCONS_NODES = 1040
+TOTAL_SCONS_NODES = 1225
 MAX_BUILD_PROGRESS = 70
 WEBCAM = os.getenv("WEBCAM") is not None
 PREBUILT = os.path.exists(os.path.join(BASEDIR, 'prebuilt'))
@@ -110,7 +110,7 @@ def build():
       r = scons.stderr.read().split(b'\n')
       compile_output += r
 
-      if retry:
+      if retry and (not dirty):
         if not os.getenv("CI"):
           print("scons build failed, cleaning in")
           for i in range(3, -1, -1):
@@ -143,30 +143,29 @@ if __name__ == "__main__" and not PREBUILT:
   build()
 
 import cereal.messaging as messaging
+from cereal import log
 
 from common.params import Params
 from selfdrive.registration import register
-from selfdrive.loggerd.config import ROOT
 from selfdrive.launcher import launcher
 
 
 # comment out anything you don't want to run
 managed_processes = {
   "thermald": "selfdrive.thermald.thermald",
-  "uploader": "selfdrive.loggerd.uploader",
+  #"uploader": "selfdrive.loggerd.uploader",
   "deleter": "selfdrive.loggerd.deleter",
   "controlsd": "selfdrive.controls.controlsd",
   "plannerd": "selfdrive.controls.plannerd",
   "radard": "selfdrive.controls.radard",
   "dmonitoringd": "selfdrive.monitoring.dmonitoringd",
   "ubloxd": ("selfdrive/locationd", ["./ubloxd"]),
-  "loggerd": ("selfdrive/loggerd", ["./loggerd"]),
-  "logmessaged": "selfdrive.logmessaged",
+  #"loggerd": ("selfdrive/loggerd", ["./loggerd"]),
+  #"logmessaged": "selfdrive.logmessaged",
   "locationd": "selfdrive.locationd.locationd",
   "tombstoned": "selfdrive.tombstoned",
-  "logcatd": ("selfdrive/logcatd", ["./logcatd"]),
-  "proclogd": ("selfdrive/proclogd", ["./proclogd"]),
-  "boardd": ("selfdrive/boardd", ["./boardd"]),   # not used directly
+  #"logcatd": ("selfdrive/logcatd", ["./logcatd"]),
+  #"proclogd": ("selfdrive/proclogd", ["./proclogd"]),
   "pandad": "selfdrive.pandad",
   "ui": ("selfdrive/ui", ["./ui"]),
   "calibrationd": "selfdrive.locationd.calibrationd",
@@ -174,15 +173,14 @@ managed_processes = {
   "camerad": ("selfdrive/camerad", ["./camerad"]),
   "sensord": ("selfdrive/sensord", ["./sensord"]),
   "clocksd": ("selfdrive/clocksd", ["./clocksd"]),
-  "gpsd": ("selfdrive/sensord", ["./gpsd"]),
-  "updated": "selfdrive.updated",
+  #"updated": "selfdrive.updated",
   "dmonitoringmodeld": ("selfdrive/modeld", ["./dmonitoringmodeld"]),
   "modeld": ("selfdrive/modeld", ["./modeld"]),
   "rtshield": "selfdrive.rtshield",
 }
 
 daemon_processes = {
-  "manage_athenad": ("selfdrive.athena.manage_athenad", "AthenadPid"),
+  #"manage_athenad": ("selfdrive.athena.manage_athenad", "AthenadPid"),
 }
 
 running: Dict[str, Process] = {}
@@ -202,16 +200,15 @@ if EON:
 persistent_processes = [
   'pandad',
   'thermald',
-  'logmessaged',
+  #'logmessaged',
   'ui',
-  'uploader',
+  #'uploader',
   'deleter',
 ]
 
 if not PC:
   persistent_processes += [
-    'updated',
-    'logcatd',
+    #'updated',
     'tombstoned',
   ]
 
@@ -220,18 +217,23 @@ if EON:
     'sensord',
   ]
 
+if TICI:
+  managed_processes["timezoned"] = "selfdrive.timezoned"
+  persistent_processes += ['timezoned']
+
 car_started_processes = [
   'controlsd',
   'plannerd',
-  'loggerd',
+  #'loggerd',
   'radard',
   'calibrationd',
   'paramsd',
   'camerad',
   'modeld',
-  'proclogd',
+  #'proclogd',
   'locationd',
   'clocksd',
+  #'logcatd',
 ]
 
 driver_view_processes = [
@@ -249,7 +251,6 @@ if not PC or WEBCAM:
 
 if EON:
   car_started_processes += [
-    'gpsd',
     'rtshield',
   ]
 else:
@@ -269,10 +270,6 @@ def register_managed_process(name, desc, car_started=False):
 def nativelauncher(pargs, cwd):
   # exec the process
   os.chdir(cwd)
-
-  # because when extracted from pex zips permissions get lost -_-
-  os.chmod(pargs[0], 0o700)
-
   os.execvp(pargs[0], pargs)
 
 def start_managed_process(name):
@@ -398,6 +395,8 @@ def send_managed_process_signal(name, sig):
 # ****************** run loop ******************
 
 def manager_init():
+  os.umask(0)  # Make sure we can create files with 777 permissions
+
   # Create folders needed for msgq
   try:
     os.mkdir("/dev/shm")
@@ -417,15 +416,10 @@ def manager_init():
   if not dirty:
     os.environ['CLEAN'] = '1'
 
-  cloudlog.bind_global(dongle_id=dongle_id, version=version, dirty=dirty, is_eon=True)
+  cloudlog.bind_global(dongle_id=dongle_id, version=version, dirty=dirty,
+                       device=HARDWARE.get_device_type())
   crash.bind_user(id=dongle_id)
-  crash.bind_extra(version=version, dirty=dirty, is_eon=True)
-
-  os.umask(0)
-  try:
-    os.mkdir(ROOT, 0o777)
-  except OSError:
-    pass
+  crash.bind_extra(version=version, dirty=dirty, device=HARDWARE.get_device_type())
 
   # ensure shared libraries are readable by apks
   if EON:
@@ -440,7 +434,7 @@ def manager_thread():
   cloudlog.info({"environ": os.environ})
 
   # save boot log
-  subprocess.call(["./loggerd", "--bootlog"], cwd=os.path.join(BASEDIR, "selfdrive/loggerd"))
+  #subprocess.call("./bootlog", cwd=os.path.join(BASEDIR, "selfdrive/loggerd"))
 
   # start daemon processes
   for p in daemon_processes:
@@ -465,15 +459,16 @@ def manager_thread():
   started_prev = False
   logger_dead = False
   params = Params()
-  thermal_sock = messaging.sub_sock('thermal')
+  device_state_sock = messaging.sub_sock('deviceState')
+  pm = messaging.PubMaster(['managerState'])
 
   while 1:
-    msg = messaging.recv_sock(thermal_sock, wait=True)
+    msg = messaging.recv_sock(device_state_sock, wait=True)
 
-    if msg.thermal.freeSpace < 0.05:
+    if msg.deviceState.freeSpacePercent < 5:
       logger_dead = True
 
-    if msg.thermal.started:
+    if msg.deviceState.started:
       for p in car_started_processes:
         if p == "loggerd" and logger_dead:
           kill_managed_process(p)
@@ -499,11 +494,25 @@ def manager_thread():
         os.sync()
         send_managed_process_signal("updated", signal.SIGHUP)
 
-    started_prev = msg.thermal.started
+    started_prev = msg.deviceState.started
 
     # check the status of all processes, did any of them die?
     running_list = ["%s%s\u001b[0m" % ("\u001b[32m" if running[p].is_alive() else "\u001b[31m", p) for p in running]
     cloudlog.debug(' '.join(running_list))
+
+    # send managerState
+    states = []
+    for p in managed_processes:
+      state = log.ManagerState.ProcessState.new_message()
+      state.name = p
+      if p in running:
+        state.running = running[p].is_alive()
+        state.pid = running[p].pid
+        state.exitCode = running[p].exitcode or 0
+      states.append(state)
+    msg = messaging.new_message('managerState')
+    msg.managerState.processes = states
+    pm.send('managerState', msg)
 
     # Exit main loop when uninstall is needed
     if params.get("DoUninstall", encoding='utf8') == "1":
@@ -536,6 +545,7 @@ def main():
     ("IsLdwEnabled", "1"),
     ("LastUpdateTime", datetime.datetime.utcnow().isoformat().encode('utf8')),
     ("OpenpilotEnabledToggle", "1"),
+    ("VisionRadarToggle", "0"),
     ("LaneChangeEnabled", "1"),
     ("IsDriverViewEnabled", "0"),
   ]
