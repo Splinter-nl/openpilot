@@ -185,6 +185,9 @@ class CarInterface(CarInterfaceBase):
       ret.wheelbase = CivicParams.WHEELBASE
       ret.centerToFront = CivicParams.CENTER_TO_FRONT
       ret.steerRatio = 15.38  # 10.93 is end-to-end spec
+      ret.steerActuatorDelay = 0.05
+      ret.steerRateCost = 0.5
+      ret.steerLimitTimer = 0.8
       ret.lateralParams.torqueBP, ret.lateralParams.torqueV = [[0, 2564, 10000], [0, 2564, 3840]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.12], [0.04]] #base [[0.15], [0.05]]
       tire_stiffness_factor = 1.
@@ -429,10 +432,6 @@ class CarInterface(CarInterfaceBase):
 
     ret.stoppingControl = True
     ret.startAccel = 0.5
-
-    ret.steerActuatorDelay = 0.05
-    ret.steerRateCost = 0.5
-    ret.steerLimitTimer = 0.8
 
     return ret
 
