@@ -147,7 +147,7 @@ class CarInterface(CarInterfaceBase):
     # For modeling details, see p.198-200 in "The Science of Vehicle Dynamics (2014), M. Guiggiani"
     ret.lateralParams.torqueBP, ret.lateralParams.torqueV = [[0], [0]]
     ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
-    ret.lateralTuning.pid.kf = 0.00004  # conservative feed-forward, base 0.00006
+    ret.lateralTuning.pid.kf = 0.00002  # conservative feed-forward, base 0.00006
 
     eps_modified = True
     for fw in car_fw:
@@ -160,8 +160,8 @@ class CarInterface(CarInterfaceBase):
       ret.wheelbase = CivicParams.WHEELBASE
       ret.centerToFront = CivicParams.CENTER_TO_FRONT
       ret.steerRatio = 15.38  # 10.93 is end-to-end spec
-      ret.steerActuatorDelay = 0.04 # base 0.1
-      ret.steerRateCost = 0.4 # base 0.5
+      ret.steerActuatorDelay = 0.02 # base 0.1
+      ret.steerRateCost = 0.5 # base 0.5
       ret.steerLimitTimer = 0.8 # base 0.8
       ret.lateralParams.torqueBP, ret.lateralParams.torqueV = [[0, 2564, 10000], [0, 2564, 3840]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.12], [0.04]] # base [[0.15], [0.05]]
