@@ -149,18 +149,13 @@ class CarInterface(CarInterfaceBase):
     ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
     ret.lateralTuning.pid.kf = 0.00002  # conservative feed-forward, base 0.00006
 
-    eps_modified = True
-    for fw in car_fw:
-      if fw.ecu == "eps" and b"," in fw.fwVersion:
-        eps_modified = True
-
     if candidate in (CAR.CIVIC_BOSCH, CAR.CIVIC_BOSCH_DIESEL):
       stop_and_go = True
       ret.mass = CivicParams.MASS
       ret.wheelbase = CivicParams.WHEELBASE
       ret.centerToFront = CivicParams.CENTER_TO_FRONT
-      ret.steerRatio = 15.65  # 11.12 is end-to-end spec for Civic Hatch Sport
-      ret.steerActuatorDelay = 0.02 # base 0.1
+      ret.steerRatio = 15.00  # 11.12 is end-to-end spec for Civic Hatch Sport
+      ret.steerActuatorDelay = 0.05 # base 0.1
       ret.steerRateCost = 0.5 # base 0.5
       ret.steerLimitTimer = 0.8 # base 0.8
       ret.lateralParams.torqueBP, ret.lateralParams.torqueV = [[0, 2564, 10000], [0, 2564, 3840]]
