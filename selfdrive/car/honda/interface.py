@@ -159,7 +159,7 @@ class CarInterface(CarInterfaceBase):
       ret.mass = CivicParams.MASS
       ret.wheelbase = CivicParams.WHEELBASE
       ret.centerToFront = CivicParams.CENTER_TO_FRONT
-      ret.steerRatio = 11.12  # 11.12 is end-to-end spec for Civic Hatch Sport
+      ret.steerRatio = 15.65  # 11.12 is end-to-end spec for Civic Hatch Sport
       ret.steerActuatorDelay = 0.02 # base 0.1
       ret.steerRateCost = 0.5 # base 0.5
       ret.steerLimitTimer = 0.8 # base 0.8
