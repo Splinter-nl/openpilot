@@ -69,6 +69,7 @@ void MainWindow::closeSettings() {
 }
 
 void MainWindow::reviewTrainingGuide() {
+  onboardingDone = false;
   main_layout->setCurrentWidget(onboardingWindow);
   onboardingWindow->updateActiveScreen();
 }
